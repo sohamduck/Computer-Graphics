@@ -1,5 +1,5 @@
 Write a program in C to draw a line by using DDA algorithm when two points are given. [Use OpenGL Library]
-dda.c
+line.c
 
 Write a program in C to draw a line by using Bresenham’s line drawing algorithm when two points are given. [Use OpenGL Library]
 bline.c
