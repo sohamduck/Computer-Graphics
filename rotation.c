@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+#include<GL/glut.h>
+#include "dda.h"
+
+void draw(void);
+void plot(void);
+void myInit(void);
+void rotate(double);
+void polygon(int*,int*,float[]);
+int n,xr,yr;
+double angle;
+int *x,*y;
+
+int main(int argv,char **argc){
+		
+		printf("Enter no. of vertices:\t");
+		scanf("%d",&n);
+
+		x=(int*)calloc(n,sizeof(int));
+		y=(int*)calloc(n,sizeof(int));
+
+		for(int i=0;i<n;++i){
+				
+				printf("Enter x%d & y%d:\t",i+1,i+1);
+				scanf("%d %d",x+i,y+i);
+
+		}
+
+		printf("Enter angle of rotation:\t");
+		scanf("%lf",&angle);
+		printf("Enter reference point x,y:\t");
+		scanf("%d %d",&xr,&yr);
+		angle*=M_PI/180;
+
+		glutInit(&argv,argc);
+		myInit();
+
+		return 0;
+
+}
+
+void myInit(void){
+		
+		glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+		glutInitWindowSize(1024,720);
+		glutCreateWindow("Rotation 2D");
+
+		glClearColor(0.0,1.0,1.0,0.0);
+		glPointSize(2.0);
+		gluOrtho2D(-100,1024.0,-100,720);
+
+		glutDisplayFunc(draw);
+		glutMainLoop();
+
+}
+
+void draw(void){
+		ddaLine(0,-100,0,720);
+		ddaLine(-100,0,1024,0);
+
+		float color[]={0,1,1};
+		polygon(x,y,color);
+		rotate(angle);
+
+}
+
+void polygon(int *x,int *y,float color[]){
+		
+		glColor3f(color[0],color[1],color[2]);
+
+
+		for(int i=0;i<n-1;++i)
+				ddaLine(x[i],y[i],x[i+1],y[i+1]);
+
+
+		ddaLine(x[0],y[0],x[n-1],y[n-1]);
+
+}
+
+void rotate(double t){
+		
+		int *a=(int*)calloc(n,sizeof(int));
+		int *b=(int*)calloc(n,sizeof(int));
+
+		for(int i=0;i<n;++i){
+				a[i]=xr+(x[i]-xr)*cos(t)-(y[i]-yr)*sin(t);
+				b[i]=yr+(x[i]-xr)*sin(t)+(y[i]-yr)*cos(t);
+		}
+		float color[]={0,0,1};
+		polygon(a,b,color);
+
+}
